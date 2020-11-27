@@ -1,2 +1,7 @@
-# aoc20
-Advent of code 2020
+# 🎄 Advent of Code 2020 🎄
+
+## Go
+
+```
+go run .
+```

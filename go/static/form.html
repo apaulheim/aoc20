@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <style>
+      html {
+        background: url(../img/bg.jpg) no-repeat center center fixed;
+        background-size: cover;
+      }
+    </style>
+  </head>
+  <title>Day {{.Title}} in Go</title>
+
+  <body>
+    <div class="parent">
+      <div class="center">
+        <div class="subtitle">Advent of code</div>
+        <div class="title">Day {{.Title}}</div>
+
+        <form action="/result/{{.Title}}" method="POST">
+          <div>
+            <textarea name="body" rows="10" cols="50">{{.Body}}</textarea>
+          </div>
+          <div><input type="submit" value="Solve" /></div>
+        </form>
+        <div style="margin-top: 50px">
+          <div class="subtitle">Result</div>
+          <textarea name="res" rows="10" cols="50">{{.Result}}</textarea>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
