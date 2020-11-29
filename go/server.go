@@ -48,9 +48,15 @@ func resultPyHandler(w http.ResponseWriter, r *http.Request, daynr string) {
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
-	body := r.FormValue("body")
-	result := Day1(body)
-	p := &Page{DayNr: daynr, Input: body, Result: result, Path: "../../", Go: goImpl[day], Py: pyURLs[day], Js: jsURLs[day]}
+	input := r.FormValue("body")
+	resp, err := http.Post("https://happyaoc20py.azurewebsites.net/api/Day1", "application/json", strings.NewReader("{\"name\": \"" +input +"\"}"))
+	if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	
+	p := &Page{DayNr: daynr, Input: input, Result: string(body), Path: "../../", Go: goImpl[day], Py: pyURLs[day], Js: jsURLs[day]}
 	renderTemplate(w, "form", p)
 }
 
