@@ -2,27 +2,65 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../style.css" />
+    <link rel="stylesheet" type="text/css" href="{{.Path}}style.css" />
     <style>
       html {
-        background: url(../img/bg.jpg) no-repeat center center fixed;
+        background: url({{.Path}}img/bg.jpg) no-repeat center center fixed;
         background-size: cover;
+      }
+      .buttons {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+      }
+      .buttons input {
+        margin: 0 10px;
+      }
+      input#solvego {
+        background: transparent url("{{.Path}}img/icon-go.png") no-repeat top
+          left;
+        background-size: 15px;
+        background-position: 7px 5px;
+      }
+      input#solvepy {
+        background: transparent url("{{.Path}}img/icon-py.png") no-repeat top
+          left;
+        background-size: 15px;
+        background-position: 7px 5px;
+      }
+      input#solvejs {
+        background: transparent url("{{.Path}}img/icon-node.png") no-repeat top
+          left;
+        background-size: 15px;
+        background-position: 7px 5px;
       }
     </style>
   </head>
-  <title>Day {{.Title}} in Go</title>
+  <title>Day {{.DayNr}} in Go</title>
 
   <body>
     <div class="parent">
       <div class="center">
-        <div class="subtitle">Advent of code</div>
-        <div class="title">Day {{.Title}}</div>
+        <div class="title">Day {{.DayNr}}</div>
+        <div class="subtitle">Input</div>
+        <form action="/result/go/{{.DayNr}}" method="POST">
+          <textarea name="body" rows="10" cols="50">{{.Input}}</textarea>
 
-        <form action="/result/{{.Title}}" method="POST">
-          <div>
-            <textarea name="body" rows="10" cols="50">{{.Body}}</textarea>
+          <div class="buttons">
+            <input type="submit" id="solvego" value="Solve" />
+            <input
+              type="submit"
+              value="Solve"
+              id="solvepy"
+              formaction="/result/py/{{.DayNr}}"
+            />
+            <input
+              type="submit"
+              value="Solve"
+              id="solvejs"
+              formaction="/result/js/{{.DayNr}}"
+            />
           </div>
-          <div><input type="submit" value="Solve" /></div>
         </form>
         <div style="margin-top: 50px">
           <div class="subtitle">Result</div>

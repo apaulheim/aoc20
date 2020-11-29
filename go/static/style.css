@@ -20,7 +20,9 @@ a {
   font-size: 2em;
   font-weight: normal;
   letter-spacing: 0.5em;
-  margin: 10px 0;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  text-shadow: 0 0 8px white;
 }
 .subtitle {
   font-size: 1.3em;
@@ -42,13 +44,14 @@ a {
 .parent {
   height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
 .center {
-  width: 500px;
-  height: 500px;
+  margin-top: 50px;
+  width: 800px;
+  min-height: 500px;
   text-align: center;
   font-weight: bold;
 }
@@ -88,7 +91,7 @@ input {
   background: transparent;
   color: white;
   border: 1px solid white;
-  padding: 5px 30px;
+  padding: 5px 20px 5px 40px;
   text-transform: uppercase;
   border-radius: 10px 10px;
   letter-spacing: 0.2em;
