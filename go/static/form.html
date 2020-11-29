@@ -47,19 +47,22 @@
           <textarea name="body" rows="10" cols="50">{{.Input}}</textarea>
 
           <div class="buttons">
-            <input type="submit" id="solvego" value="Solve" />
+            {{if .Go}}<input type="submit" id="solvego" value="Solve" />{{end}}
+            {{if .Py}}
             <input
               type="submit"
               value="Solve"
               id="solvepy"
               formaction="/result/py/{{.DayNr}}"
             />
+            {{end}} {{if .Js}}
             <input
               type="submit"
               value="Solve"
               id="solvejs"
               formaction="/result/js/{{.DayNr}}"
             />
+            {{end}}
           </div>
         </form>
         <div style="margin-top: 50px">

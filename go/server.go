@@ -10,71 +10,74 @@ import (
 	"strconv"
 	"strings"
 )
-
+// Input for form template
 type Page struct {
 	DayNr  string
 	Input   string
 	Result string
 	Path string
 	Go bool
-	Py string
-	Js string
+	Py bool
+	Js bool
 }
-var goImpl = new([24]bool)
-var pyURLs = new([24]string)
-var jsURLs = new([24]string)
+
+var goImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+var pyImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+var jsImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+
+var gofunc = [24](func(string)string){Day1,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil}
+
+
 
 func viewHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 	day, err := strconv.Atoi(daynr)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
-	renderTemplate(w, "form", &Page{DayNr: daynr, Input: "", Result: "", Path: "../", Go: goImpl[day], Py: pyURLs[day], Js: jsURLs[day]})
+	}
+	day--;
+	renderTemplate(w, "form", &Page{DayNr: daynr, Input: "", Result: "", Path: "../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1})
 }
 
 func resultGoHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 	day, err := strconv.Atoi(daynr)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
+	}
+	day--
 	body := r.FormValue("body")
-	result := Day1(body)
-	p := &Page{DayNr: daynr, Input: body, Result: result, Path: "../../", Go: goImpl[day], Py: pyURLs[day], Js: jsURLs[day]}
+	dayImpl := gofunc[day];
+	result := dayImpl(body)
+	p := &Page{DayNr: daynr, Input: body, Result: result, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
+	renderTemplate(w, "form", p)
+}
+
+func azureFuncHandler(w http.ResponseWriter, r *http.Request, daynr string, lang string) {
+	urlLang := ""
+	if(lang == "py") {
+		urlLang = "py"
+	}
+	day, err := strconv.Atoi(daynr)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+	input := r.FormValue("body")
+	resp, err := http.Post("https://happyaoc20" + urlLang + ".azurewebsites.net/api/Day" + daynr, "application/json", strings.NewReader("{\"name\": \"" +input +"\"}"))
+	if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	
+	p := &Page{DayNr: daynr, Input: input, Result: string(body), Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
 	renderTemplate(w, "form", p)
 }
 
 func resultPyHandler(w http.ResponseWriter, r *http.Request, daynr string) {
-	day, err := strconv.Atoi(daynr)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
-	input := r.FormValue("body")
-	resp, err := http.Post("https://happyaoc20py.azurewebsites.net/api/Day1", "application/json", strings.NewReader("{\"name\": \"" +input +"\"}"))
-	if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	
-	p := &Page{DayNr: daynr, Input: input, Result: string(body), Path: "../../", Go: goImpl[day], Py: pyURLs[day], Js: jsURLs[day]}
-	renderTemplate(w, "form", p)
+	azureFuncHandler(w, r, daynr, "py")
 }
 
 func resultJsHandler(w http.ResponseWriter, r *http.Request, daynr string) {
-	day, err := strconv.Atoi(daynr)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
-	input := r.FormValue("body")
-	resp, err := http.Post("https://happyaoc20.azurewebsites.net/api/Day1", "application/json", strings.NewReader("{\"name\": \"" +input +"\"}"))
-	if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	
-	p := &Page{DayNr: daynr, Input: input, Result: string(body), Path: "../../", Go: goImpl[day], Py: pyURLs[day], Js: jsURLs[day]}
-	renderTemplate(w, "form", p)
+	azureFuncHandler(w, r, daynr, "js")
 }
 
 var templates = template.Must(template.ParseFiles("static/form.html"))
