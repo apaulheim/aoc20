@@ -2,23 +2,23 @@ import logging
 
 import azure.functions as func
 
+import json
+
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    name = req.params.get('name')
-    if not name:
+    input = req.params.get('input')
+    if not input:
         try:
             req_body = req.get_json()
         except ValueError:
             pass
         else:
-            name = req_body.get('name')
+            input = req_body.get('input')
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    result = { "silver": "Day 1 silver star result from py.", "gold": "Day 1 gold star result from py."}
+    if input:
+        return func.HttpResponse(json.dumps(result))
     else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+        return func.HttpResponse(json.dumps(result))

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -14,7 +15,8 @@ import (
 type Page struct {
 	DayNr  string
 	Input   string
-	Result string
+	Silver string
+	Gold string
 	Path string
 	Go bool
 	Py bool
@@ -27,13 +29,20 @@ type InputIndex struct {
 	Py [24]int
 	Js [24]int
 }
+
+// StarResult Each day two results need to be calculated
+type StarResult struct {
+	Silver string
+	Gold string
+}
+
 //                   1 2 3 4 5 6 7 8 9 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2
 //                                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
 var goImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 var pyImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 var jsImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 
-var gofunc = [24](func(string)string){Day1,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil}
+var gofunc = [24](func(string)StarResult){Day1,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil}
 
 
 
@@ -43,7 +52,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request, daynr string) {
         http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	day--;
-	renderTemplate(w, "form", &Page{DayNr: daynr, Input: "", Result: "", Path: "../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1})
+	renderTemplate(w, "form", &Page{DayNr: daynr, Input: "", Silver: "", Gold: "", Path: "../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1})
 }
 
 func resultGoHandler(w http.ResponseWriter, r *http.Request, daynr string) {
@@ -55,7 +64,7 @@ func resultGoHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 	body := r.FormValue("body")
 	dayImpl := gofunc[day];
 	result := dayImpl(body)
-	p := &Page{DayNr: daynr, Input: body, Result: result, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
+	p := &Page{DayNr: daynr, Input: body, Silver: result.Silver, Gold: result.Gold, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
 	renderTemplate(w, "form", p)
 }
 
@@ -69,14 +78,23 @@ func azureFuncHandler(w http.ResponseWriter, r *http.Request, daynr string, lang
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
 	input := r.FormValue("body")
-	resp, err := http.Post("https://happyaoc20" + urlLang + ".azurewebsites.net/api/Day" + daynr, "application/json", strings.NewReader("{\"name\": \"" +input +"\"}"))
+	resp, err := http.Post("https://happyaoc20" + urlLang + ".azurewebsites.net/api/Day" + daynr, "application/json", strings.NewReader("{\"input\": \"" +input +"\"}"))
 	if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	
+	// read response body to string
+	bodyStr, err := ioutil.ReadAll(resp.Body)
+	// parse json
+	result := StarResult{}
+	err = json.Unmarshal([]byte(bodyStr), &result)
+	if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+
 	day--
-	p := &Page{DayNr: daynr, Input: input, Result: string(body), Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
+	p := &Page{DayNr: daynr, Input: input, Silver: result.Silver, Gold: result.Gold, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
 	renderTemplate(w, "form", p)
 }
 

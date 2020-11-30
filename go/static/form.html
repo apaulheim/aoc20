@@ -35,6 +35,39 @@
         background-size: 15px;
         background-position: 7px 5px;
       }
+      textarea {
+        width: 450px;
+      }
+      .result-container {
+        margin-top: 50px;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+      }
+      .result-row {
+        display: flex;
+        flex-flow: row nowrap;
+        min-height: 50px;
+        align-items: center;
+      }
+      .star {
+        font-size: 2em;
+        width: 50px;
+      }
+      .gold {
+        color: gold;
+      }
+      .gold textarea {
+        color: gold;
+        width: 400px;
+      }
+      .silver {
+        color: silver;
+      }
+      .silver textarea {
+        color: silver;
+        width: 400px;
+      }
     </style>
   </head>
   <title>Day {{.DayNr}} in Go</title>
@@ -66,9 +99,19 @@
             {{end}}
           </div>
         </form>
-        <div style="margin-top: 50px">
-          <div class="subtitle">Result</div>
-          <textarea name="res" rows="10" cols="50">{{.Result}}</textarea>
+        <div class="result-container">
+          <div class="result-row silver">
+            <div class="star">&#9733;</div>
+            <div>
+              <textarea name="res" rows="1" cols="44">{{.Silver}}</textarea>
+            </div>
+          </div>
+          <div class="result-row gold">
+            <div class="star">&#9733;</div>
+            <div>
+              <textarea name="res" rows="1" cols="44">{{.Gold}}</textarea>
+            </div>
+          </div>
         </div>
       </div>
     </div>
