@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 )
-// Input for form template
+// Page Input for form template
 type Page struct {
 	DayNr  string
 	Input   string
@@ -21,6 +21,14 @@ type Page struct {
 	Js bool
 }
 
+// InputIndex Input for index html
+type InputIndex struct {
+	Go [24]int
+	Py [24]int
+	Js [24]int
+}
+//                   1 2 3 4 5 6 7 8 9 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2
+//                                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
 var goImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 var pyImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 var jsImpl = [24]int{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
@@ -67,7 +75,7 @@ func azureFuncHandler(w http.ResponseWriter, r *http.Request, daynr string, lang
     }
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	
+	day--
 	p := &Page{DayNr: daynr, Input: input, Result: string(body), Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
 	renderTemplate(w, "form", p)
 }
@@ -80,7 +88,13 @@ func resultJsHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 	azureFuncHandler(w, r, daynr, "js")
 }
 
-var templates = template.Must(template.ParseFiles("static/form.html"))
+var funcMap = template.FuncMap{
+	// The name "inc" is what the function will be called in the template text.
+	"inc": func(i int) int {
+		return i + 1
+	},
+}
+var templates = template.Must(template.New("index.html").Funcs(funcMap).ParseFiles("static/form.html", "static/index.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl+".html", p)
@@ -102,9 +116,18 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 	}
 }
 
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	p := &InputIndex{Go: goImpl, Py: pyImpl, Js: jsImpl}
+	err := templates.ExecuteTemplate(w, "index.html", p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func main() {
 	fmt.Println("Serving")
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("./static/img"))))
+	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/day/", makeHandler(viewHandler))
 	http.HandleFunc("/result/go/", makeHandler(resultGoHandler))
 	http.HandleFunc("/result/py/", makeHandler(resultPyHandler))

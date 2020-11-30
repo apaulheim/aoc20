@@ -2,8 +2,8 @@
 
 <head>
     <title>Annis AOC</title>
-    <link rel="stylesheet" type="text/css"href="style.css">
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico">
+    <link rel="stylesheet" type="text/css"href="img/style.css">
+    <link rel="icon" type="image/png" sizes="48x48" href="/img/favicon.ico">
 </head>
 
 <body>
@@ -13,25 +13,37 @@
             <div class="subtitle">Annis</div>
             <div class="title">🎄 Advent of Code 🎄</div>
             <div class="days">
-                <a href="/day/1">
+                {{$go := .Go}}
+                {{$py := .Py}}
+                {{$js := .Js}}
+                {{range $index, $element := .Go}}
+                {{$daynr := inc $index}}
+                <a href="/day/{{$daynr}}">
                     <div class="day">
                         <div class="ornaments">
+                            {{- if eq (index $go $index) (1) -}}
                             <div class="ornament-container">
                                 <div class="ornament-thread goorn"></div>
                                 <div class="ornament goorn"></div>
                             </div>
+                            {{- end -}}
+                            {{- if eq (index $py $index) (1) -}}
                             <div class="ornament-container">
                                 <div class="ornament-thread py"></div>
                                 <div class="ornament py"></div>
                             </div>
+                            {{- end -}}
+                            {{- if eq (index $js $index) (1) -}}
                             <div class="ornament-container">
                                 <div class="ornament-thread js"></div>
                                 <div class="ornament js"></div>
                             </div>
+                            {{- end -}}
                         </div>
-                        <div class="date">1</div>
+                        <div class="date">{{$daynr}}</div>
                     </div>
                 </a>
+                {{end}}
             </div>
         </div>
 </body>

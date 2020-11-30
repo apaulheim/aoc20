@@ -1,5 +1,5 @@
 html {
-  background: url(img/bg.jpg) no-repeat center center fixed;
+  background: url(bg.jpg) no-repeat center center fixed;
 
   background-size: cover;
 }
@@ -37,7 +37,7 @@ a {
   height: 100px;
   width: 100px;
   background-size: contain;
-  background-image: url(img/go.png);
+  background-image: url(go.png);
   background-repeat: no-repeat;
 }
 
@@ -144,16 +144,16 @@ input {
 }
 
 .ornament.goorn {
-  background-image: url(img/icon-go.png);
+  background-image: url(icon-go.png);
   background-color: #077c71;
 }
 
 .ornament.py {
-  background-image: url(img/icon-py.png);
+  background-image: url(icon-py.png);
   background-color: #fc8608;
 }
 
 .ornament.js {
-  background-image: url(img/icon-node.png);
+  background-image: url(icon-node.png);
   background-color: #508319;
 }
