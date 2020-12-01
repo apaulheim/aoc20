@@ -34,20 +34,21 @@ jobs:
 
       - uses: azure/docker-login@v1
         with:
-          login-server: apaulheim.azurecr.io
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker build . -t apaulheim.azurecr.io/aoc20go:${{ github.sha }}
-          docker push apaulheim.azurecr.io/aoc20go:${{ github.sha }}
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go:${{ github.sha }}
 
       - name: 'Deploy to Azure Container Instances'
         uses: 'azure/aci-deploy@v1'
         with:
-          resource-group: aoc20
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
           dns-name-label: aocgo
-          image: apaulheim.azurecr.io/aoc20go:${{ github.sha }}
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go:${{ github.sha }}
+          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: aocgo-container
+          name: aci-aoc20go
           location: 'west europe'
