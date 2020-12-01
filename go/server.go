@@ -55,16 +55,24 @@ func viewHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 	renderTemplate(w, "form", &Page{DayNr: daynr, Input: "", Silver: "", Gold: "", Path: "../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1})
 }
 
+func textAreaToCSV(body string) string {
+	return strings.Join(strings.Split(body, "\r\n"), ",")
+}
+
+func csvToTextArea(body string) string {
+	return strings.Join(strings.Split(body, ","), "\r\n")
+}
+
 func resultGoHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 	day, err := strconv.Atoi(daynr)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	day--
-	body := r.FormValue("body")
+	body := textAreaToCSV(r.FormValue("body"))
 	dayImpl := gofunc[day];
 	result := dayImpl(body)
-	p := &Page{DayNr: daynr, Input: body, Silver: result.Silver, Gold: result.Gold, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
+	p := &Page{DayNr: daynr, Input: csvToTextArea(body), Silver: result.Silver, Gold: result.Gold, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
 	renderTemplate(w, "form", p)
 }
 
@@ -77,7 +85,7 @@ func azureFuncHandler(w http.ResponseWriter, r *http.Request, daynr string, lang
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
-	input := r.FormValue("body")
+	input := textAreaToCSV(r.FormValue("body"))
 	resp, err := http.Post("https://happyaoc20" + urlLang + ".azurewebsites.net/api/Day" + daynr, "application/json", strings.NewReader("{\"input\": \"" +input +"\"}"))
 	if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -86,15 +94,20 @@ func azureFuncHandler(w http.ResponseWriter, r *http.Request, daynr string, lang
 	
 	// read response body to string
 	bodyStr, err := ioutil.ReadAll(resp.Body)
-	// parse json
-	result := StarResult{}
-	err = json.Unmarshal([]byte(bodyStr), &result)
 	if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
+	// parse json
+	fmt.Println("Response body: " + string(bodyStr))
+	result := StarResult{}
+	err = json.Unmarshal(bodyStr, &result)
+	if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+    }
+	fmt.Println(result)
 
 	day--
-	p := &Page{DayNr: daynr, Input: input, Silver: result.Silver, Gold: result.Gold, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
+	p := &Page{DayNr: daynr, Input: csvToTextArea(input), Silver: result.Silver, Gold: result.Gold, Path: "../../", Go: goImpl[day]==1, Py: pyImpl[day]==1, Js: jsImpl[day]==1}
 	renderTemplate(w, "form", p)
 }
 
@@ -150,5 +163,5 @@ func main() {
 	http.HandleFunc("/result/go/", makeHandler(resultGoHandler))
 	http.HandleFunc("/result/py/", makeHandler(resultPyHandler))
 	http.HandleFunc("/result/js/", makeHandler(resultJsHandler))
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
