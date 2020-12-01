@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker build .t apaulheim.azurecr.io/aoc20go:${{ github.sha }}
+          docker build . -t apaulheim.azurecr.io/aoc20go:${{ github.sha }}
           docker push apaulheim.azurecr.io/aoc20go:${{ github.sha }}
 
       - name: 'Deploy to Azure Container Instances'
