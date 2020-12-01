@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  aocgo:
+    domainname: aocgo
+    image: apaulheim.azurecr.io/aoc20go:latest
+    ports:
+      - "80:80"
+    expose:
+      - 80

@@ -5,9 +5,9 @@ FROM golang:1.15-alpine
 ## image that will hold our application source
 ## files
 RUN mkdir /app
-## We copy everything in the root directory
+## We copy everything in the folder go
 ## into our /app directory
-ADD . /app
+ADD go /app
 ## We specify that we now wish to execute 
 ## any further commands inside our /app
 ## directory
