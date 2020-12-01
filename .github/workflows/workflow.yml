@@ -38,17 +38,12 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go:${{ github.sha }}
-
-      - name: 'Deploy to Azure Container Instances'
-        uses: 'azure/aci-deploy@v1'
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go
+          
+      - name: Azure CLI script
+        uses: azure/CLI@v1
         with:
-          resource-group: ${{ secrets.RESOURCE_GROUP }}
-          dns-name-label: aoc20go
-          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/aoc20go:${{ github.sha }}
-          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          registry-username: ${{ secrets.REGISTRY_USERNAME }}
-          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: aci-aoc20go
-          location: 'west europe'
+          azcliversion: 2.0.72
+          inlineScript: |
+            az container restart --name aocgo --resource-group aoc20 --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
