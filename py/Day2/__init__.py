@@ -19,7 +19,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     silver = 0
     gold = 0
     for i in lines:
-        matchObj = re.match(r'([0-9])-([0-9]) ([a-z]): ([a-z]*)', i)
+        matchObj = re.match(r'(\d+)-(\d+) ([a-z]): ([a-z]*)', i)
         if matchObj:
             matches = matchObj.groups()
             lower = int(matches[0])

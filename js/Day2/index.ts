@@ -10,7 +10,7 @@ const httpTrigger: AzureFunction = async function (
   let silver = 0;
   let gold = 0;
 
-  const regexofdoom = /(?<lower>[0-9])-(?<upper>[0-9]) (?<letter>[a-z]): (?<pw>[a-z]*)/;
+  const regexofdoom = /(?<lower>[0-9]+)-(?<upper>[0-9]+) (?<letter>[a-z]): (?<pw>[a-z]*)/;
 
   for (const i of input) {
     const data = i.match(regexofdoom).groups;
