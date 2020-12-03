@@ -40,7 +40,7 @@ type StarResult struct {
 //                                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
 var goImpl = [24]int{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 var pyImpl = [24]int{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-var jsImpl = [24]int{1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+var jsImpl = [24]int{1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 
 var gofunc = [24](func(string)StarResult){Day1,Day2,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil}
 

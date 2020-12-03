@@ -25,46 +25,20 @@ go run .
 
 serves under http://localhost:8080
 
-## Deployment
+## Continuous Deployment
+
+![AOC workflow](https://github.com/apaulheim/aoc20/workflows/AOC_Workflow/badge.svg)
 
 I'm still figuring it out 😅 but want to write down what I learned and the next steps.
 
-Basically I'm following this tutorial: https://docs.docker.com/engine/context/aci-integration/
+I finally managed to set up a continous deployment with GitHub Actions, at least for the Go server. I followed this tutorial: https://docs.microsoft.com/de-de/azure/container-instances/container-instances-github-action
 
-ACI doesn't support port mapping so your server needs to serve on 80.
+After every push to this repo, what is done in my workflow file is 
 
-Note that those commands are doc for me, you won't be able to execute them because you have no rights on my Azure resources.
+1. Authentication 
+2. Build and push my Docker image to my Azure Container Registry. 
+3. Restart my ACI
 
-You need an Azure Container Registry and have "admin user" enabled (can also be done after creation)
+Now in the tutorial, on step 3 they create and start a new Azure Container Instance on EVERY run. That's not what I want, I just want to restart my existing ACI, which automatically checks out the newest image that I just pushed. I do that with some generic Azure CLI action GitHub provides: https://github.com/marketplace/actions/azure-cli-action
 
-Remember the URL of your registry (something.azurecr.io) and name your image accordingly during the build
-
-```bash
-docker context create aci azure
-docker build -t apaulheim.azurecr.io/aoc20go .
-az login
-az acr login --name apaulheim
-docker push apaulheim.azurecr.io/aoc20go
-```
-
-I was not able to run the image as ACI after building and pushing like in the tutorial. I went to the Azure Website and created an ACI with the wizard and selected the pushed image. Not sure how to update, still investigation needed on that. Will probably try a Docker compose file like this
-
-```yaml
-version: "3.7"
-services:
-  aocgo:
-    domainname: aocgo
-    image: apaulheim.azurecr.io/aoc20go:latest
-    ports:
-      - "80:80"
-    expose:
-      - 80
-```
-
-with
-
-```bash
-docker context use azure
-docker compose up
-docker compose down
-```
+So now, maybe my py and ts Azure functions are next 😁 https://github.com/marketplace/actions/azure-functions-action
