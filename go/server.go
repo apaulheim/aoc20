@@ -76,17 +76,13 @@ func resultGoHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 	renderTemplate(w, "form", p)
 }
 
-func azureFuncHandler(w http.ResponseWriter, r *http.Request, daynr string, lang string) {
-	urlLang := ""
-	if(lang == "py") {
-		urlLang = "py"
-	}
+func azureFuncHandler(w http.ResponseWriter, r *http.Request, daynr string, lang string) {	
 	day, err := strconv.Atoi(daynr)
     if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
 	input := textAreaToCSV(r.FormValue("body"))
-	resp, err := http.Post("https://happyaoc20" + urlLang + ".azurewebsites.net/api/Day" + daynr, "application/json", strings.NewReader("{\"input\": \"" +input +"\"}"))
+	resp, err := http.Post("https://aoc20.vercel.app/api/" + lang + "/day" + daynr, "application/json", strings.NewReader("{\"input\": \"" +input +"\"}"))
 	if err != nil {
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
@@ -116,7 +112,7 @@ func resultPyHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 }
 
 func resultJsHandler(w http.ResponseWriter, r *http.Request, daynr string) {
-	azureFuncHandler(w, r, daynr, "js")
+	azureFuncHandler(w, r, daynr, "ts")
 }
 
 var funcMap = template.FuncMap{
