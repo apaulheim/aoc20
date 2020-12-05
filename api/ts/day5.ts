@@ -39,9 +39,8 @@ export default (request: NowRequest, response: NowResponse) => {
         allSeats.delete(res);
         if (res > silver) silver = res;
       });
-      console.log(silver);
       let gold = 0;
-      let allSeatsArray = Array.from(allSeats.values()).sort();
+      let allSeatsArray = Array.from(allSeats.values()).sort((a, b) => a - b);
       let i = 0;
       while (i == allSeatsArray[i] && i < allSeatsArray.length) i++;
       gold = allSeatsArray[i];
