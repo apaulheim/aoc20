@@ -31,19 +31,19 @@ export default (request: NowRequest, response: NowResponse) => {
             });
           });
 
-          let validEntries = 0;
+          let validEntries = new Set();
           Object.keys(pass).forEach((key) => {
             if (key == "byr") {
               const val = parseInt(pass[key]);
-              if (val >= 1920 && val <= 2002) validEntries++;
+              if (val >= 1920 && val <= 2002) validEntries.add("byr");
             } else if (key == "iyr") {
               const val = parseInt(pass[key]);
-              if (val >= 2010 && val <= 2020) validEntries++;
+              if (val >= 2010 && val <= 2020) validEntries.add("iyr");
             } else if (key == "eyr") {
               const val = parseInt(pass[key]);
-              if (val >= 2020 && val <= 2030) validEntries++;
+              if (val >= 2020 && val <= 2030) validEntries.add("eyr");
             } else if (key == "hgt") {
-              const re = /(?<hgt>[0-9]+)(?<unit>(cm|in))/;
+              const re = /^(?<hgt>[0-9]+)(?<unit>(cm|in))$/;
               const match = pass[key].match(re);
               if (match) {
                 const hgt = parseInt(match.groups.hgt);
@@ -51,30 +51,27 @@ export default (request: NowRequest, response: NowResponse) => {
                   (match.groups.unit == "cm" && hgt >= 150 && hgt <= 193) ||
                   (match.groups.unit == "in" && hgt >= 59 && hgt <= 76)
                 )
-                  validEntries++;
+                  validEntries.add("hgt");
               }
             } else if (key == "hcl") {
-              const re = /#(([0-9]|[a-f]){6})/;
+              const re = /^#(([0-9]|[a-f]){6})$/;
               const match = pass[key].match(re);
-              if (match) validEntries++;
+              if (match) validEntries.add("hcl");
             } else if (key == "ecl") {
-              const re = /(amb|blu|brn|gry|grn|hzl|oth)/;
+              const re = /^(amb|blu|brn|gry|grn|hzl|oth)$/;
               const match = pass[key].match(re);
-              if (match) validEntries++;
+              if (match) validEntries.add("ecl");
             } else if (key == "pid") {
-              const re = /([0-9]){9}/;
+              const re = /^([0-9]){9}$/;
               const match = pass[key].match(re);
-              if (match) validEntries++;
+              if (match) validEntries.add("pid");
             }
           });
-          if (validEntries == 7) {
-            console.log(pass);
+          if (validEntries.size == 7) {
             gold++;
           }
         }
       }
-      console.log("silver ", silver);
-      console.log("gold ", gold);
 
       return { silver: silver.toString(), gold: gold.toString() };
     } else return { silver: "No input", gold: "No input" };
