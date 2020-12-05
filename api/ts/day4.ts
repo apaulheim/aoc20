@@ -8,7 +8,6 @@ export default (request: NowRequest, response: NowResponse) => {
   const solve = (): StarResult => {
     if (input) {
       const passportsStr = input.split(",,");
-      let passports = [];
       let silver = 0;
       let gold = 0;
       for (let passport of passportsStr) {
