@@ -10,7 +10,7 @@ class handler(BaseHTTPRequestHandler):
     body = json.loads(post_body)
     data = body['input']
     if data:
-        numbers = list(map(int, data.split(",")))
+        numbers = list(map(int, data.split(";")))
         silver = 0
         gold = 0
         for i in numbers:

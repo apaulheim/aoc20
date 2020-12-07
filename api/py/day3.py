@@ -22,7 +22,7 @@ class handler(BaseHTTPRequestHandler):
     body = json.loads(post_body)
     data = body['input']
     if data:
-        lines = data.split(",")
+        lines = data.split(";")
         silver = calc(lines, 3, 1)
         gold = 1
 

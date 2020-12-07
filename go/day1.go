@@ -6,7 +6,7 @@ import (
 
 // Day1 Compute result for Day1
 func Day1(data string) StarResult {
-	numbersStr := strings.Split(data, ",")
+	numbersStr := strings.Split(data, ";")
     var numbers = []int{}
 
     for _, i := range numbersStr {

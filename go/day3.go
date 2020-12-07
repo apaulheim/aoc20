@@ -22,7 +22,7 @@ func Day3Calc(lines []string, right int, down int) (int) {
 
 // Day3 Compute result for Day3
 func Day3(data string) StarResult {
-	lines := strings.Split(data, ",")
+	lines := strings.Split(data, ";")
 	silver := Day3Calc(lines, 3, 1)
 	gold := 1
 	xVals := [...]int{1, 3, 5, 7, 1}

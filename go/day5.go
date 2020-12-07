@@ -17,11 +17,11 @@ func Day5FindRow(lower int, upper int, dir string) [2]int {
 	return [2]int{newlower, newupper}
 }
 
-// Day5 Compute result for Day4
+// Day5 Compute result for Day5
 func Day5(data string) StarResult {
 	silver := 0
 	gold := 0
-	directionsStr := strings.Split(data, ",")
+	directionsStr := strings.Split(data, ";")
 	var allSeats [1024]bool
 	for i := 0; i < 1024; i++ {
 		allSeats[i] = true

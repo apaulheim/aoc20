@@ -7,7 +7,7 @@ export default (request: NowRequest, response: NowResponse) => {
 
   const solve = (): StarResult => {
     if (input) {
-      const lines = input.split(",");
+      const lines = input.split(";");
 
       const calc = function (right, down) {
         let x = 0;

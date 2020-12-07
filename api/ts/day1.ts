@@ -7,7 +7,7 @@ export default (request: NowRequest, response: NowResponse) => {
 
   const solve = (): StarResult => {
     if (input) {
-      const numbers = input.split(",").map((str: string) => parseInt(str));
+      const numbers = input.split(";").map((str: string) => parseInt(str));
       let silver = 0;
       let gold = 0;
 

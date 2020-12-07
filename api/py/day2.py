@@ -11,7 +11,7 @@ class handler(BaseHTTPRequestHandler):
     body = json.loads(post_body)
     data = body['input']
     if data:
-        lines = data.split(",")
+        lines = data.split(";")
         silver = 0
         gold = 0
         for i in lines:

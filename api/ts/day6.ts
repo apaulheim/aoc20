@@ -9,11 +9,11 @@ export default (request: NowRequest, response: NowResponse) => {
     if (input) {
       let silver = 0;
       let gold = 0;
-      const groups = input.split(",,");
+      const groups = input.split(";;");
       groups.forEach((group) => {
         // silver part
         const groupSet = new Set();
-        const persons = group.split(",");
+        const persons = group.split(";");
 
         // gold part
         let goldAnswers = new Set();

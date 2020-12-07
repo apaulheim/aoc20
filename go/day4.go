@@ -6,7 +6,7 @@ import (
 )
 // Day4 Compute result for Day4
 func Day4(data string) StarResult {
-	passportStr := strings.Split(data, ",,")
+	passportStr := strings.Split(data, ";;")
 	silver := 0
 	gold := 0
 	for _, passport := range passportStr {
@@ -14,7 +14,7 @@ func Day4(data string) StarResult {
 			silver++
 
 			pass := make(map[string]string)
-			lines := strings.Split(passport, ",")
+			lines := strings.Split(passport, ";")
 			for _, line := range lines {
 				pairs := strings.Split(line, " ")
 				for _, data := range pairs {

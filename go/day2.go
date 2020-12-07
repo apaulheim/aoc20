@@ -7,7 +7,7 @@ import (
 
 // Day2 Compute result for Day2
 func Day2(data string) StarResult {
-	lines := strings.Split(data, ",")
+	lines := strings.Split(data, ";")
 	
 	silver := 0
 	gold := 0

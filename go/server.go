@@ -40,7 +40,7 @@ type StarResult struct {
 //                                     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4
 var goImpl = [24]int{1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 var pyImpl = [24]int{1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-var jsImpl = [24]int{1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+var jsImpl = [24]int{1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
 
 var gofunc = [24](func(string)StarResult){Day1,Day2,Day3,Day4,Day5,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil}
 
@@ -56,11 +56,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request, daynr string) {
 }
 
 func textAreaToCSV(body string) string {
-	return strings.Join(strings.Split(body, "\r\n"), ",")
+	return strings.Join(strings.Split(body, "\r\n"), ";")
 }
 
 func csvToTextArea(body string) string {
-	return strings.Join(strings.Split(body, ","), "\r\n")
+	return strings.Join(strings.Split(body, ";"), "\r\n")
 }
 
 func resultGoHandler(w http.ResponseWriter, r *http.Request, daynr string) {

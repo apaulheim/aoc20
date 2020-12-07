@@ -7,7 +7,7 @@ export default (request: NowRequest, response: NowResponse) => {
 
   const solve = (): StarResult => {
     if (input) {
-      input = input.split(",");
+      input = input.split(";");
       let silver = 0;
       let gold = 0;
 

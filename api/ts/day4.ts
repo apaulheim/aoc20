@@ -7,7 +7,7 @@ export default (request: NowRequest, response: NowResponse) => {
 
   const solve = (): StarResult => {
     if (input) {
-      const passportsStr = input.split(",,");
+      const passportsStr = input.split(";;");
       let silver = 0;
       let gold = 0;
       for (let passport of passportsStr) {
@@ -23,7 +23,7 @@ export default (request: NowRequest, response: NowResponse) => {
           silver++;
 
           let pass = {};
-          passport.split(",").forEach((line) => {
+          passport.split(";").forEach((line) => {
             line.split(" ").forEach((data) => {
               const [key, val] = data.split(":");
               pass[key] = val;

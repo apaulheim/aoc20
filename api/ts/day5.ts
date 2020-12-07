@@ -17,7 +17,7 @@ export default (request: NowRequest, response: NowResponse) => {
       };
 
       let silver = 0;
-      const directionsStr = input.split(",");
+      const directionsStr = input.split(";");
       const allSeats = new Set();
       for (let i = 0; i < 1024; i++) {
         allSeats.add(i);
