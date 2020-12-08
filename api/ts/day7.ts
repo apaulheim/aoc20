@@ -68,7 +68,7 @@ export default (request: NowRequest, response: NowResponse) => {
         let result = 1;
         if (tree.has(color)) {
           const arr = tree.get(color);
-          console.log(color, arr);
+          //   console.log(color, arr);
           arr.forEach((bag: Bag) => {
             result += bag.amount * parseContainedBags(bag.color);
           });
