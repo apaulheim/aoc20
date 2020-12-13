@@ -1,10 +1,6 @@
 import { NowRequest, NowResponse } from "@vercel/node";
 import { StarResult } from "./shared/data";
 
-interface Cmd {
-  cmd: string;
-  value: number;
-}
 export default (request: NowRequest, response: NowResponse) => {
   let input = request.body && request.body.input;
   let responseMessage: StarResult;

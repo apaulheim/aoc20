@@ -30,3 +30,11 @@ func (s *set) Contains(value string) bool {
 func (s *set) Length() int {
 	return len(s.m)
 }
+
+func (s *set) ToArray() []string {
+    arr := []string{}
+    for k := range s.m { 
+        arr = append(arr, k)
+    }
+    return arr
+}
