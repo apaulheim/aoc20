@@ -45,5 +45,6 @@ jobs:
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
-          inlineScript: |
+          inlineScript: | 
+            az account show
             az container restart --name aocgo --resource-group aoc20 --subscription ${{ secrets.AZURE_SUBSCRIPTION }}
